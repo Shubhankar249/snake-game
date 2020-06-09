@@ -1,4 +1,6 @@
 let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells, currScore,  foodImg, trophyImg, hitItself=false;
+
+let speed=130, counter=0;
 //const snakeHit=document.getElementById('snakeHit');
 
 
@@ -123,7 +125,6 @@ function drawFood() {
 function gameLoop() {
     draw();
     update(snake.direction);
-
     if (shouldStop()) {
         clearInterval(game);
         //snakeHit.play();
@@ -139,5 +140,4 @@ function gameLoop() {
 init();
 
 
-
-let game=setInterval(gameLoop, 130); // To call gameLoop function every 100ms use setInterval function
+let game=setInterval(gameLoop, speed); // To call gameLoop function every 100ms use setInterval function
