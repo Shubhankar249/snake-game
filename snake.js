@@ -1,4 +1,6 @@
-let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells, currScore=0,  foodImg, trophyImg;
+let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells, currScore,  foodImg, trophyImg, hitItself=false;
+//const snakeHit=document.getElementById('snakeHit');
+
 
 function init() {
     canvas = document.getElementById('change');
@@ -6,7 +8,16 @@ function init() {
     canvas.height=H=18*cellSize;
 
     pen = canvas.getContext('2d');  // Context object used to draw on canvas
+    currScore=0;
 
+    occupiedCells=[];
+
+    for (let i=0; i<40; i++) {
+        occupiedCells.push([]);
+        for (let j=0; j<20; j++) {
+            occupiedCells[i].push(0);
+        }
+    }
     snake={
         len:2,
         color:"black",
@@ -15,6 +26,8 @@ function init() {
         createSnake:function () {
             for (let i=0; i<this.len; i++)
                 this.cells.push({x:i, y:0});
+
+            this.cells.forEach((v)=> {occupiedCells[v.x+2][v.y+2]=1})
         }
     };
 
@@ -60,7 +73,11 @@ function update(direction) {
         currScore++;
         snake.len++;
     }
-    else snake.cells.shift();
+    else  {
+        var a=snake.cells[0].x , b=snake.cells[0].y;
+        occupiedCells[a+2][b+2]=0;
+        snake.cells.shift();
+    }
 
     switch (direction) {
         case "right":
@@ -79,17 +96,23 @@ function update(direction) {
             snake.cells.push({x:snake.cells[snake.len-2].x, y:snake.cells[snake.len-2].y-1});
             break;
     }
+    if (occupiedCells[snake.cells[snake.len-1].x+2][snake.cells[snake.len-1].y+2]===1)
+        hitItself=true;
+    occupiedCells[snake.cells[snake.len-1].x+2][snake.cells[snake.len-1].y+2]=1;
 }
 
 function shouldStop() {
     if (snake.cells[snake.len - 1].x < 0 || snake.cells[snake.len - 1].y < 0 || snake.cells[snake.len - 1].x*cellSize > W-cellSize || snake.cells[snake.len - 1].y*cellSize-cellSize >= H-cellSize
-
+        || hitItself
     ) return true;
 }
 
 function getFood() {
-    foodX=Math.floor(Math.random()*(W-cellSize)/cellSize);
-    foodY=Math.floor(Math.random()*(H-cellSize)/cellSize);
+    do {
+        foodX=Math.floor(Math.random()*(W-cellSize)/cellSize);
+        foodY=Math.floor(Math.random()*(H-cellSize)/cellSize);
+    }while (occupiedCells[foodX][foodY]);
+
 }
 
 function drawFood() {
@@ -103,10 +126,18 @@ function gameLoop() {
 
     if (shouldStop()) {
         clearInterval(game);
-        alert("YOU LOSE!!");
+        //snakeHit.play();
+        if (!localStorage.maxScore) {
+            localStorage.maxScore=currScore;
+        }else
+            localStorage.maxScore=Math.max(localStorage.maxScore, currScore);
+
+        alert(`Your Score= ${currScore} \nHighest score= ${localStorage.maxScore}`);
     }
 }
 
 init();
+
+
 
 let game=setInterval(gameLoop, 130); // To call gameLoop function every 100ms use setInterval function
