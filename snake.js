@@ -1,8 +1,6 @@
-let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells, currScore,  foodImg, trophyImg, hitItself=false;
+let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells=[], currScore,  foodImg, trophyImg, hitItself=false, game, pauseCounter, hasUpdated=false;
 
-let speed=130, counter=0;
 //const snakeHit=document.getElementById('snakeHit');
-
 
 function init() {
     canvas = document.getElementById('change');
@@ -11,8 +9,9 @@ function init() {
 
     pen = canvas.getContext('2d');  // Context object used to draw on canvas
     currScore=0;
-
-    occupiedCells=[];
+    pauseCounter=false;
+    hitItself=false;
+    occupiedCells.length=0;
 
     for (let i=0; i<40; i++) {
         occupiedCells.push([]);
@@ -27,7 +26,7 @@ function init() {
         direction:"right",
         createSnake:function () {
             for (let i=0; i<this.len; i++)
-                this.cells.push({x:i, y:0});
+                this.cells.push({x:i+5, y:3});
 
             this.cells.forEach((v)=> {occupiedCells[v.x+2][v.y+2]=1})
         }
@@ -43,14 +42,32 @@ function init() {
     gameOver=false;
     getFood();
 
-    window.addEventListener('keydown', (key)=> {
-        if (key.code==="Space") clearInterval(game);
-        else if ((key.code==="ArrowRight" || key.key==="d") && (snake.direction==="up" || snake.direction==="down"))    snake.direction="right";
-        else if ((key.code==="ArrowDown" || key.key==="s") && (snake.direction==="left" || snake.direction==="right"))    snake.direction="down";
-        else if ((key.code==="ArrowLeft" ||  key.key==="a") && (snake.direction==="up" || snake.direction==="down"))    snake.direction="left";
-        else if ((key.code==="ArrowUp" || key.key==="w") && (snake.direction==="left" || snake.direction==="right"))    snake.direction="up";
-    });
+
 }
+
+window.addEventListener('keydown', (key)=> {
+    if (key.key === " ") {
+        pauseCounter ? startGame(currScore) : clearInterval(game);
+        pauseCounter = !pauseCounter;
+    } else if (key.key === "r") {
+        init();
+        startGame(currScore);
+    } else if (hasUpdated && (key.code === "ArrowRight" || key.key === "d") && (snake.direction === "up" || snake.direction === "down")) {
+        snake.direction = "right";
+        hasUpdated = false;
+    } else if (hasUpdated && (key.code === "ArrowDown" || key.key === "s") && (snake.direction === "left" || snake.direction === "right")) {
+        snake.direction = "down";
+        hasUpdated = false;
+    } else if (hasUpdated && (key.code === "ArrowLeft" || key.key === "a") && (snake.direction === "up" || snake.direction === "down")){
+        snake.direction="left";
+        hasUpdated=false;
+    }
+    else if (hasUpdated &&(key.code==="ArrowUp" || key.key==="w") && (snake.direction==="left" || snake.direction==="right"))    {
+        snake.direction="up";
+        hasUpdated=false;
+    }
+});
+
 
 function draw() {
     pen.clearRect(0, 0, W, H);
@@ -70,10 +87,15 @@ function draw() {
 }
 
 function update(direction) {
-    if (snake.cells[snake.len-1].x===foodX && snake.cells[snake.len-1].y===foodY) {
+    hasUpdated=true;
+    if (snake.cells[snake.len-1].x===foodX && snake.cells[snake.len-1].y===foodY) {     //EATING FOOD
         getFood();
         currScore++;
         snake.len++;
+        if (currScore%5===0) {
+            clearInterval(game);
+            startGame(currScore);
+        }
     }
     else  {
         var a=snake.cells[0].x , b=snake.cells[0].y;
@@ -113,7 +135,7 @@ function getFood() {
     do {
         foodX=Math.floor(Math.random()*(W-cellSize)/cellSize);
         foodY=Math.floor(Math.random()*(H-cellSize)/cellSize);
-    }while (occupiedCells[foodX][foodY]);
+    }while (occupiedCells[foodX+2][foodY+2]);
 
 }
 
@@ -133,11 +155,17 @@ function gameLoop() {
         }else
             localStorage.maxScore=Math.max(localStorage.maxScore, currScore);
 
-        alert(`Your Score= ${currScore} \nHighest score= ${localStorage.maxScore}`);
+        alert(`Your Score= ${currScore} \nHighest score= ${localStorage.maxScore}\nTo restart press R`);
     }
 }
 
 init();
+alert("Press space to start/pause the game\nUse W,A,S,D or Up, Down, Left, Right keys for movement!!");
+let  startGame=(speed) =>{
+    game=setInterval(gameLoop, 180 - speed*2); // To call gameLoop function every 100ms use setInterval function
+};
 
 
-let game=setInterval(gameLoop, speed); // To call gameLoop function every 100ms use setInterval function
+startGame(currScore);
+
+

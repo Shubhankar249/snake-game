@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="649394d3-80be-49d6-8629-662f795a6e23" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snake.js" beforeDir="false" afterPath="$PROJECT_DIR$/snake.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +34,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -68,6 +69,10 @@
       <updated>1591611942967</updated>
       <workItem from="1591611945351" duration="17421000" />
       <workItem from="1591677987492" duration="7116000" />
+      <workItem from="1591685138978" duration="132000" />
+      <workItem from="1591707448835" duration="4116000" />
+      <workItem from="1592059042350" duration="32000" />
+      <workItem from="1592215847683" duration="3547000" />
     </task>
     <servers />
   </component>
