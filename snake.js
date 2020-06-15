@@ -1,11 +1,12 @@
-let canvas, pen, snake, W, H, gameOver, cellSize=50, foodX, foodY, occupiedCells=[], currScore,  foodImg, trophyImg, hitItself=false, game, pauseCounter, hasUpdated=false;
-
-//const snakeHit=document.getElementById('snakeHit');
+let canvas, pen, snake, W, H, cellSize, foodX, foodY, occupiedCells=[], currScore=0,  foodImg, trophyImg, hitItself=false, game, pauseCounter, hasUpdated=false;
 
 function init() {
     canvas = document.getElementById('change');
-    canvas.width=W=37*cellSize;
-    canvas.height=H=18*cellSize;
+    canvas.width=W=window.innerWidth -60;
+    cellSize=W/40;
+    canvas.height=H=19*cellSize;
+
+
 
     pen = canvas.getContext('2d');  // Context object used to draw on canvas
     currScore=0;
@@ -13,9 +14,9 @@ function init() {
     hitItself=false;
     occupiedCells.length=0;
 
-    for (let i=0; i<40; i++) {
+    for (let i=0; i< W/cellSize + 5; i++) {
         occupiedCells.push([]);
-        for (let j=0; j<20; j++) {
+        for (let j=0; j< H/cellSize +5; j++) {
             occupiedCells[i].push(0);
         }
     }
@@ -39,10 +40,7 @@ function init() {
     trophyImg.src="assets/trophy.png";
 
     snake.createSnake();
-    gameOver=false;
     getFood();
-
-
 }
 
 window.addEventListener('keydown', (key)=> {
@@ -76,7 +74,7 @@ function draw() {
     pen.drawImage(trophyImg, 18, 20, cellSize, cellSize);
     pen.fillStyle="white";
     pen.font="20px Roboto";
-    pen.fillText(String(currScore), 37, 46);
+    pen.fillText(String(currScore), 35, 46);
 
     pen.fillStyle=snake.color;
     for (let i=0; i<snake.len-1; i++)
@@ -155,12 +153,12 @@ function gameLoop() {
         }else
             localStorage.maxScore=Math.max(localStorage.maxScore, currScore);
 
-        alert(`Your Score= ${currScore} \nHighest score= ${localStorage.maxScore}\nTo restart press R`);
+        alert(`Your Score= ${currScore} \nHighest score= ${localStorage.maxScore}\nTo restart press r`);
     }
 }
 
 init();
-alert("Press space to start/pause the game\nUse W,A,S,D or Up, Down, Left, Right keys for movement!!");
+alert("Press space to resume/pause the game\nUse W,A,S,D or Up, Down, Left, Right keys for movement!!");
 let  startGame=(speed) =>{
     game=setInterval(gameLoop, 180 - speed*2); // To call gameLoop function every 100ms use setInterval function
 };
