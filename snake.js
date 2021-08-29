@@ -160,7 +160,7 @@ function gameLoop() {
 init();
 alert("Press space to resume/pause the game\nUse W,A,S,D or Up, Down, Left, Right keys for movement!!");
 let  startGame=(speed) =>{
-    game=setInterval(gameLoop, 180 - speed*2); // To call gameLoop function every 100ms use setInterval function
+    game=setInterval(gameLoop, 120 - speed*2); // To call gameLoop function every 100ms use setInterval function
 };
 
 
